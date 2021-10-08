@@ -1,14 +1,19 @@
 import ntptime
+import machine
 
 from config import Config
 from network_device import NetworkDevice
+from sensors import Ds18b20Sensor
 
 
-def setup():
-    net_dev = NetworkDevice(Config["wifi"]["name"], Config["wifi"]["password"])
-    net_dev.wait_for_network()
+net_dev = NetworkDevice(Config["wifi"]["name"], Config["wifi"]["password"])
+net_dev.wait_for_network()
 
-    ntptime.settime()
+ntptime.settime()
+
+sensor = Ds18b20Sensor(machine.Pin(4))
 
 
-setup()
+def loop():
+    for i in range(0, 5):
+        print(sensor.read())

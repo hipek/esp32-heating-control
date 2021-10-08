@@ -1,6 +1,7 @@
 import network
 import time
 
+
 class NetworkDevice:
     def __init__(self, name, password):
         self.sta_if = network.WLAN(network.STA_IF)
@@ -11,4 +12,5 @@ class NetworkDevice:
         while not self.sta_if.isconnected():
             time.sleep(1)
             print("waiting for wifi")
-        print("connected!")
+        self.config = self.sta_if.ifconfig()
+        print("connected", self.config[0])
