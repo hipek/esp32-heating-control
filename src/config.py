@@ -5,4 +5,7 @@ def secret(name):
     return val.strip()
 
 
-Config = {"wifi": {"name": "bbb333", "password": secret("wifi_password")}}
+Config = {
+    "wifi": {"name": "bbb333", "password": secret("wifi_password")},
+    "mqtt": {"server": secret("mqtt_server")},
+}

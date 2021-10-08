@@ -10,4 +10,4 @@ class Ds18b20Sensor:
     def read(self, index=0):
         self.ds_sensor.convert_temp()
         time.sleep_ms(750)
-        return self.ds_sensor.read_temp(roms[index])
+        return self.ds_sensor.read_temp(self.roms[index])
