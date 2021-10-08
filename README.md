@@ -39,3 +39,7 @@
 # deploy new pyton file
 
     ampy put src/new_file.py
+
+# deplot via socket using https://github.com/micropython/webrepl
+
+    ./webrepl_cli.py -p test ../main.py espressif.local:/main.py
