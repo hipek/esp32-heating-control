@@ -1,1 +1,5 @@
 firmware/
+secrets/
+wifi_password
+__pycache__/
+src/__pycache__/
