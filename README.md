@@ -20,6 +20,10 @@
 
 	https://github.com/tflander/esp32-machine-emulator
 
+# connect to python shell on device
+
+    screen /dev/tty.usbserial-0001 115200
+
 # list files
 
     ampy ls
