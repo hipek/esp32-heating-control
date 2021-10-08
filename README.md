@@ -43,3 +43,7 @@
 # deplot via socket using https://github.com/micropython/webrepl
 
     ./webrepl_cli.py -p test ../main.py espressif.local:/main.py
+
+# tutorials
+
+button: https://esp32io.com/tutorials/esp32-button-debounce
