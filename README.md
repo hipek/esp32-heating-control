@@ -46,4 +46,8 @@
 
 # tutorials
 
-button: https://esp32io.com/tutorials/esp32-button-debounce
+    button: https://esp32io.com/tutorials/esp32-button-debounce
+
+# bluetooth sensor
+
+    https://github.com/AnthonyKNorman/Xiaomi_LYWSD03MMC_for_HA
