@@ -1,2 +1,1 @@
-python src/main.py
-
+TEST=true PYTHONPATH=./src/mock python src/main.py

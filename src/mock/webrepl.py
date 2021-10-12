@@ -1,0 +1,2 @@
+def start(password):
+    pass

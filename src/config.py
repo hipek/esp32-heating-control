@@ -1,5 +1,11 @@
+import os
+
+
 def secret(name):
-    f = open(name, "r")
+    if hasattr(os, "environ") and os.environ.get("TEST") == "true":
+        f = open("secrets/" + name, "r")
+    else:
+        f = open(name, "r")
     val = f.read()
     f.close()
     return val.strip()
