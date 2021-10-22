@@ -18,6 +18,8 @@ Config = {
     "webrepl": {
         "password": secret("webrepl_password"),
     },
-    "sensors": [],
+    "sensors": [
+        {"type": "Ds18b20Sensor", "pin": 25},
+    ],
     "switches": [],
 }

@@ -22,14 +22,13 @@ import webrepl
 
 from config import Config
 from network_device import NetworkDevice
-from sensors import Ds18b20Sensor
 
 
 class Main:
     def __init__(self):
         self.net_dev = NetworkDevice(Config["wifi"]["name"], Config["wifi"]["password"])
-        self.sensor = Ds18b20Sensor(machine.Pin(25))
         self.mqtt_client = MQTTClient("heating_control", Config["mqtt"]["server"])
+        self.exit_loop = False
 
     def setup(self):
         self.net_dev.wait_for_network()
@@ -49,33 +48,21 @@ class Main:
         asyncio.run(self.loop())
 
     async def loop(self):
-        asyncio.create_task(self.publish_sensor())
-        asyncio.create_task(self.receive_command())
-        while True:
-            await asyncio.sleep(1)
+        while not self.exit_loop:
+            await asyncio.sleep(0.2)
 
-    async def publish_sensor(self):
-        i = 0
-        while True:
-            self.mqtt_client.publish(
-                topic="heating_control/temp",
-                msg=json.dumps([i, await self.sensor.read(0)]),
-            )
-            i += 1
-            await asyncio.sleep(10)
-
-    async def receive_command(self):
-        i = 0
-        while True:
-            t = utime.localtime()
-            self.mqtt_client.publish(
-                topic="heating_control/watchdog",
-                msg=json.dumps([i, f"{t[0]}-{t[1]}-{t[2]}T{t[3]}:{t[4]}:{t[5]}Z"]),
-            )
-            i += 1
-            await asyncio.sleep(60)
+    # async def publish_sensor(self):
+    #     i = 0
+    #     while True:
+    #         self.mqtt_client.publish(
+    #             topic="heating_control/temp",
+    #             msg=json.dumps([i, await self.sensor.read(0)]),
+    #         )
+    #         i += 1
+    #         await asyncio.sleep(10)
 
 
-main = Main()
-main.setup()
-main.start()
+if __name__ == "__main__":
+    main = Main()
+    main.setup()
+    main.start()
