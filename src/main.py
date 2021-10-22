@@ -18,8 +18,8 @@ except:
     from mock.mqtt import MQTTClient
 
 import ntptime
-
 import webrepl
+
 from config import Config
 from network_device import NetworkDevice
 from sensors import Ds18b20Sensor
@@ -35,7 +35,7 @@ class Main:
         self.net_dev.wait_for_network()
         ntptime.settime()
         self.mqtt_client.connect()
-        webrepl.start(password="test")
+        webrepl.start(password=Config["webrepl"]["password"])
 
         try:
             import uftpd
