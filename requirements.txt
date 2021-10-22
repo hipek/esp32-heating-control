@@ -4,3 +4,4 @@ adafruit-ampy==1.1.0
 black==21.9b0
 paho-mqtt==1.6.1
 isort==5.9.3
+pytest==6.2.5
