@@ -1,4 +1,7 @@
-import uasyncio
+try:
+    import uasyncio as asyncio
+except:
+    import asyncio
 
 import ds18x20
 import onewire
@@ -12,5 +15,5 @@ class Ds18b20Sensor:
 
     async def read(self, index=0):
         self.ds_sensor.convert_temp()
-        await uasyncio.sleep_ms(750)
+        await asyncio.sleep(0.750)
         return self.ds_sensor.read_temp(self.roms[index])
