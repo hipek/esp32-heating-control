@@ -1,40 +1,62 @@
-import ntptime
-import machine
-import time
 import json
-import utime
-import webrepl
 
+import machine
+import uasyncio
+import utime
+
+import ntptime
+import webrepl
 from config import Config
+from mqtt import MQTTClient
 from network_device import NetworkDevice
 from sensors import Ds18b20Sensor
-from mqtt import MQTTClient
-
-net_dev = NetworkDevice(Config["wifi"]["name"], Config["wifi"]["password"])
-net_dev.wait_for_network()
-
-webrepl.start(password="test")
-
-ntptime.settime()
-
-sensor = Ds18b20Sensor(machine.Pin(22))
-
-client = MQTTClient("heating_control", Config["mqtt"]["server"])
-client.connect()
 
 
-def loop():
-    start_time = time.ticks_ms()
-    interval = 60000
+class Main:
+    def __init__(self):
+        self.net_dev = NetworkDevice(Config["wifi"]["name"], Config["wifi"]["password"])
+        self.sensor = Ds18b20Sensor(machine.Pin(25))
+        self.mqtt_client = MQTTClient("heating_control", Config["mqtt"]["server"])
 
-    while True:
-        if time.ticks_ms() - start_time >= interval:
-            start_time = time.ticks_ms()
+    def setup(self):
+        self.net_dev.wait_for_network()
+        ntptime.settime()
+        self.mqtt_client.connect()
+        webrepl.start(password="test")
 
-            client.publish(
+        import uftpd
+
+    def reset(self):
+        machine.reset()
+
+    async def loop(self):
+        uasyncio.create_task(self.publish_sensor())
+        uasyncio.create_task(self.receive_command())
+        while True:
+            await uasyncio.sleep(1)
+
+    async def publish_sensor(self):
+        i = 0
+        while True:
+            self.mqtt_client.publish(
                 topic="heating_control/temp",
-                msg=json.dumps([sensor.read(0), sensor.read(1), utime.localtime()]),
+                msg=json.dumps([i, await self.sensor.read(0)]),
             )
+            i += 1
+            await uasyncio.sleep(10)
+
+    async def receive_command(self):
+        i = 0
+        while True:
+            self.mqtt_client.publish(
+                topic="heating_control/watchdog",
+                msg=json.dumps([i]),
+            )
+            i += 1
+            await uasyncio.sleep(60)
 
 
-loop()
+main = Main()
+main.setup()
+
+uasyncio.run(main.loop())
